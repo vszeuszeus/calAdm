@@ -10,12 +10,12 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="child_count">Количество детей</label>
-                                        <input v-validate="'required|decimal|min_value:1|max_value:8'"
-                                               data-vv-as="выше"
-                                               v-model="child_count"
-                                               :class="{'input': true, 'is-danger-border': errors.has('child_count') }"
-                                               id="child_count" name="child_count" class="form-control"/>
-                                        <span v-show="errors.has('child_count')" class="help is-danger">{{ errors.first('child_count') }}</span>
+                                    <input v-validate="'required|decimal|min_value:1|max_value:8'"
+                                           data-vv-as="выше"
+                                           v-model="child_count"
+                                           :class="{'input': true, 'is-danger-border': errors.has('child_count') }"
+                                           id="child_count" name="child_count" class="form-control"/>
+                                    <span v-show="errors.has('child_count')" class="help is-danger">{{ errors.first('child_count') }}</span>
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -56,7 +56,8 @@
                                            :class="{'input': true, 'is-danger-border': errors.has('end') }"
                                            name="end"
                                            v-model="end" id="end"/>
-                                    <span v-show="errors.has('end')" class="help is-danger">{{ errors.first('end') }}</span>
+                                    <span v-show="errors.has('end')"
+                                          class="help is-danger">{{ errors.first('end') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -85,10 +86,12 @@
                             <div class="col-lg-12">
                                 <label>Няни:</label>
                                 <p>
-                                    <button class="btn btn-primary" v-on:click="modalAddNannies()">Добавить няню</button>
+                                    <button class="btn btn-primary" v-on:click="modalAddNannies()">Добавить няню
+                                    </button>
                                 </p>
-                                <nannies-in-edit-norder v-if="nannies.length > 0" :nannies="nannies"></nannies-in-edit-norder>
-                                <span v-else>Спсиок нянь в заказе не может быть пустым</span>
+                                <nannies-in-edit-norder v-if="nannies.length > 0"
+                                                        :nannies="nannies"></nannies-in-edit-norder>
+                                <div class="alert alert-warning" v-else>Спсиок нянь в заказе не может быть пустым</div>
                             </div>
                         </div>
                         <div class="row">
@@ -127,15 +130,18 @@
                                                         <div v-for="addNannyLet in row" class="col-lg-4" style="">
                                                             <div class="row">
                                                                 <div class="col-lg-5">
-                                                                    <img style="height:60px;" class="img-circle" :src="'http://supernanny.kz/' + addNannyLet.User.photo"
+                                                                    <img style="height:60px;" class="img-circle"
+                                                                         :src="'http://supernanny.kz/' + addNannyLet.User.photo"
                                                                          :alt="addNannyLet.User.name">
-                                                                </div >
+                                                                </div>
                                                                 <div class="col-lg-7">
                                                                     <span style="font-size:12px;">{{addNannyLet.User.name}}</span>
                                                                     <p>
                                                                         <button class="btn btn-info btn-xs"
-                                                                                v-on:click="addNanny(addNannyLet)"><i style="top:3px;"
-                                                                                                                  title="Добавить" class="fa fa-plus"></i> Добавить
+                                                                                v-on:click="addNanny(addNannyLet)"><i
+                                                                                style="top:3px;"
+                                                                                title="Добавить" class="fa fa-plus"></i>
+                                                                            Добавить
                                                                         </button>
                                                                     </p>
                                                                 </div>
@@ -148,7 +154,9 @@
                                         <p v-else>Свободных нянь на время этого заказа нет.</p>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" v-on:click="dismodalAddNannies()" class="btn btn-primary">Готово</button>
+                                        <button type="button" v-on:click="dismodalAddNannies()" class="btn btn-primary">
+                                            Готово
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -218,23 +226,23 @@
             toRenderForAddNannies: function () {
                 let vm = this;
                 let baseNannies = vm.searchedNannies.slice();
-                if(vm.deletedNannies.length > 0){
+                if (vm.deletedNannies.length > 0) {
                     vm.deletedNannies.forEach(function (itemD) {
                         console.log('start first');
-                        if(baseNannies.filter(function (item) {
-                            console.log('start second');
-                            console.log(itemD.id + " === " + item.id + (itemD.id === item.id));
-                            return (itemD.id === item.id);
-                        }).length === 0 ){
+                        if (baseNannies.filter(function (item) {
+                                console.log('start second');
+                                console.log(itemD.id + " === " + item.id + (itemD.id === item.id));
+                                return (itemD.id === item.id);
+                            }).length === 0) {
                             baseNannies.push(itemD);
                         }
                     });
                 }
-                if(vm.nannies.length > 0){
+                if (vm.nannies.length > 0) {
                     baseNannies = baseNannies.filter(function (item) {
                         return (vm.nannies.filter(function (itemN) {
-                                return (itemN.id === item.id);
-                            }).length === 0);
+                            return (itemN.id === item.id);
+                        }).length === 0);
                     });
                 }
 
@@ -243,14 +251,14 @@
                 baseNannies.forEach(function (item, index) {
                     if (groupArr.length < 3) {
                         groupArr.push(item);
-                        if((index + 1) === baseNannies.length){
+                        if ((index + 1) === baseNannies.length) {
                             baseArr.push(groupArr.slice());
                         }
                     } else {
                         baseArr.push(groupArr.slice());
                         groupArr = [];
                         groupArr.push(item);
-                        if((index + 1) === baseNannies.length){
+                        if ((index + 1) === baseNannies.length) {
                             baseArr.push(groupArr.slice());
                         }
                     }
@@ -262,29 +270,42 @@
             saveNorder: function () {
                 let vm = this;
                 vm.$validator.validateAll().then((result) => {
-                    if(result){
-                        if(vm.nannies <= 0){
+                    if (result) {
+                        if (vm.nannies.length === 0) {
                             return;
                         }
+                        let mappedNannies = vm.nannies.map((item) => {
+                            return item.id
+                        });
                         axios({
                             method: "POST",
-                            url: "ajax/norder/update/",
+                            url: "/ajax/norder/edit/" + vm.norder.id + '/',
                             data: {
-                                id: vm.norder.id,
-                                child_count: vm.child_count,
-                                babies: vm.babies,
+                                child_count: +vm.child_count,
+                                babies: +vm.babies,
                                 start: vm.start,
                                 end: vm.end,
-                                amount: vm.amount,
-                                nannies: vm.nannies
+                                amount: +vm.amount,
+                                nannies: mappedNannies
                             }
                         }).then(function (response) {
-                            if (response.data.result === true) {
-
+                            if (response.data.success === true) {
+                                vm.$parent.updateNorder({
+                                    id: vm.norder.id,
+                                    child_count: vm.child_count,
+                                    babies: vm.babies,
+                                    start: vm.start,
+                                    end: vm.end,
+                                    amount: vm.amount,
+                                    nannies: vm.nannies
+                                })
                             }
                             console.log(response);
                         })
-                    }else{
+                            .catch(e => {
+                                console.log(e)
+                            });
+                    } else {
                         vm.validateResult = "Исправьте ошибки в полях, помеченных красным цветом."
                     }
                 });
@@ -295,9 +316,9 @@
             deleteNanny: function (nanny_id) {
                 let vm = this;
                 this.nannies = this.nannies.filter(function (item) {
-                    if(item.id !== nanny_id){
+                    if (item.id !== nanny_id) {
                         return true;
-                    }else{
+                    } else {
                         vm.deletedNannies.push(item);
                         return false;
                     }
@@ -320,7 +341,7 @@
             },
             addNanny: function (nanny) {
                 let vm = this;
-                if(vm.nannies.filter(function (item) {
+                if (vm.nannies.filter(function (item) {
                         return (nanny.id === item.id);
                     }).length === 0) {
                     vm.nannies.push(nanny);
@@ -334,13 +355,15 @@
     }
 </script>
 <style>
-    .is-danger{
-        color:red;
+    .is-danger {
+        color: red;
     }
-    .is-danger-border{
-        border:2px solid red;
+
+    .is-danger-border {
+        border: 2px solid red;
     }
-    .help{
-        font-size:13px;
+
+    .help {
+        font-size: 13px;
     }
 </style>

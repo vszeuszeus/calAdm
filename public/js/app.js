@@ -17720,6 +17720,23 @@ if ($('#vue-main').length > 0) {
             endEditNorder: function endEditNorder() {
                 this.editStart = false;
                 this.toEditNorder = false;
+            },
+            updateNorder: function updateNorder(norder) {
+                console.log(this);
+                var vm = this;
+                vm.norders = vm.norders.map(function (item) {
+                    if (item.id === norder.id) {
+                        item.child_count = norder.child_count;
+                        item.babies = norder.babies;
+                        item.start = norder.start;
+                        item.end = norder.end;
+                        item.amount = norder.amount;
+                        item.Nanny = norder.nannies;
+                    }
+                    return item;
+                });
+                vm.endEditNorder();
+                vm.renderCalendar();
             }
         },
         mounted: function mounted() {
@@ -70115,7 +70132,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "\n.is-danger{\n    color:red;\n}\n.is-danger-border{\n    border:2px solid red;\n}\n.help{\n    font-size:13px;\n}\n", ""]);
+exports.push([module.i, "\n.is-danger {\n    color: red;\n}\n.is-danger-border {\n    border: 2px solid red;\n}\n.help {\n    font-size: 13px;\n}\n", ""]);
 
 // exports
 
@@ -70126,6 +70143,14 @@ exports.push([module.i, "\n.is-danger{\n    color:red;\n}\n.is-danger-border{\n 
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -70391,24 +70416,38 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var vm = this;
             vm.$validator.validateAll().then(function (result) {
                 if (result) {
-                    if (vm.nannies <= 0) {
+                    if (vm.nannies.length === 0) {
                         return;
                     }
+                    var mappedNannies = vm.nannies.map(function (item) {
+                        return item.id;
+                    });
                     axios({
                         method: "POST",
-                        url: "ajax/norder/update/",
+                        url: "/ajax/norder/edit/" + vm.norder.id + '/',
                         data: {
-                            id: vm.norder.id,
-                            child_count: vm.child_count,
-                            babies: vm.babies,
+                            child_count: +vm.child_count,
+                            babies: +vm.babies,
                             start: vm.start,
                             end: vm.end,
-                            amount: vm.amount,
-                            nannies: vm.nannies
+                            amount: +vm.amount,
+                            nannies: mappedNannies
                         }
                     }).then(function (response) {
-                        if (response.data.result === true) {}
+                        if (response.data.success === true) {
+                            vm.$parent.updateNorder({
+                                id: vm.norder.id,
+                                child_count: vm.child_count,
+                                babies: vm.babies,
+                                start: vm.start,
+                                end: vm.end,
+                                amount: vm.amount,
+                                nannies: vm.nannies
+                            });
+                        }
                         console.log(response);
+                    }).catch(function (e) {
+                        console.log(e);
                     });
                 } else {
                     vm.validateResult = "Исправьте ошибки в полях, помеченных красным цветом.";
@@ -70876,7 +70915,11 @@ var render = function() {
                                 }
                               }
                             },
-                            [_vm._v("Добавить няню")]
+                            [
+                              _vm._v(
+                                "Добавить няню\n                                "
+                              )
+                            ]
                           )
                         ]),
                         _vm._v(" "),
@@ -70884,7 +70927,7 @@ var render = function() {
                           ? _c("nannies-in-edit-norder", {
                               attrs: { nannies: _vm.nannies }
                             })
-                          : _c("span", [
+                          : _c("div", { staticClass: "alert alert-warning" }, [
                               _vm._v(
                                 "Спсиок нянь в заказе не может быть пустым"
                               )
@@ -71096,7 +71139,7 @@ var render = function() {
                                                                     }
                                                                   }),
                                                                   _vm._v(
-                                                                    " Добавить\n                                                                    "
+                                                                    "\n                                                                        Добавить\n                                                                    "
                                                                   )
                                                                 ]
                                                               )
@@ -71135,7 +71178,11 @@ var render = function() {
                                   }
                                 }
                               },
-                              [_vm._v("Готово")]
+                              [
+                                _vm._v(
+                                  "\n                                        Готово\n                                    "
+                                )
+                              ]
                             )
                           ])
                         ])

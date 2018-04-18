@@ -123,6 +123,23 @@ if ($('#vue-main').length > 0) {
             endEditNorder: function () {
                 this.editStart = false;
                 this.toEditNorder = false;
+            },
+            updateNorder: function(norder) {
+                console.log(this);
+                let vm = this;
+                vm.norders = vm.norders.map((item) => {
+                    if (item.id === norder.id) {
+                        item.child_count = norder.child_count;
+                        item.babies = norder.babies;
+                        item.start = norder.start;
+                        item.end = norder.end;
+                        item.amount = norder.amount;
+                        item.Nanny = norder.nannies;
+                    }
+                    return item;
+                });
+                vm.endEditNorder();
+                vm.renderCalendar();
             }
         },
         mounted: function () {
@@ -154,7 +171,7 @@ if ($('#vue-main-nanny-hours').length > 0) {
                 once: false
             },
             resultCaption: "",
-            changedMonth : false,
+            changedMonth: false,
             changedYear: false
         },
         computed: {
@@ -267,28 +284,28 @@ if ($('#vue-main-nanny-hours').length > 0) {
                 this.$nextTick(function () {
 
                     $("#startWorkTime").datepicker({
-                        datepicker:false,
-                        timepicker:true,
+                        datepicker: false,
+                        timepicker: true,
                         confirmButton: true,
                         clearButton: true,
                         autoCLose: true,
                         language: 'ru',
                         onlyTimepicker: true,
-                        onSelect: function(fd){
+                        onSelect: function (fd) {
                             vm.addWorkTimeData.start = fd;
                         }
 
                     });
 
                     $("#endWorkTime").datepicker({
-                        datepicker:false,
-                        timepicker:true,
+                        datepicker: false,
+                        timepicker: true,
                         confirmButton: true,
                         clearButton: true,
                         autoCLose: true,
                         language: 'ru',
                         onlyTimepicker: true,
-                        onSelect: function(fd){
+                        onSelect: function (fd) {
                             vm.addWorkTimeData.end = fd;
                         }
                     });
@@ -298,7 +315,7 @@ if ($('#vue-main-nanny-hours').length > 0) {
             saveWorkTime: function () {
                 let vm = this;
                 vm.$validator.validateAll().then((result) => {
-                    if(result) {
+                    if (result) {
                         axios({
                             method: "post",
                             url: `/ajax/add_worktime/`,
@@ -321,7 +338,7 @@ if ($('#vue-main-nanny-hours').length > 0) {
                             .catch(e => {
                                 console.log(e);
                             })
-                    }else{
+                    } else {
                         vm.addWorkTimeData.errorCaption = 'Исправьте ошибки!';//"Укажите начальное и конечное время";
                     }
                 });
